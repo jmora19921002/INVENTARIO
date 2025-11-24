@@ -29,9 +29,7 @@ def load_user(user_id):
 def create_tables():
     with app.app_context():
         try:
-            # Eliminar todas las tablas existentes y recrearlas
-            db.drop_all()
-            # Crear todas las tablas con la nueva estructura
+            # Crear todas las tablas si no existen (no eliminar en producción)
             db.create_all()
             # Crear usuario admin por defecto si no existe
             if not User.query.filter_by(username='admin').first():
@@ -590,5 +588,6 @@ def get_equipment_ip(id):
     })
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
 

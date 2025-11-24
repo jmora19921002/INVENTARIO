@@ -1,0 +1,26 @@
+services:
+  # Servicio Web - Aplicación Flask
+  - type: web
+    name: inventario-web
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: inventario-db
+          property: connectionString
+    healthCheckPath: /
+
+  # Base de Datos PostgreSQL
+  - type: pspg
+    name: inventario-db
+    plan: free
+    databaseName: inventario
+    databaseUser: inventario_user
+

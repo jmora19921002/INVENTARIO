@@ -12,9 +12,14 @@ class Config:
     DATABASE_PORT = os.environ.get('DATABASE_PORT') or '5432'
     DATABASE_NAME = os.environ.get('DATABASE_NAME') or 'inventario'
     
-    # Si DATABASE_URL está definida, usarla directamente (útil para servicios como Heroku, Railway, etc.)
-    if os.environ.get('DATABASE_URL'):
-        SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+    # Si DATABASE_URL está definida, usarla directamente (útil para servicios como Heroku, Railway, Render, etc.)
+    database_url = os.environ.get('DATABASE_URL')
+    if database_url:
+        # Render puede usar postgres:// en lugar de postgresql://
+        # SQLAlchemy requiere postgresql://, así que lo convertimos si es necesario
+        if database_url.startswith('postgres://'):
+            database_url = database_url.replace('postgres://', 'postgresql://', 1)
+        SQLALCHEMY_DATABASE_URI = database_url
     else:
         SQLALCHEMY_DATABASE_URI = f'postgresql://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}'
     
