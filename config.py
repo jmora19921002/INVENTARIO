@@ -6,11 +6,12 @@ class Config:
     # Configuración de PostgreSQL
     # Formato: postgresql://usuario:contraseña@host:puerto/nombre_base_datos
     # Ejemplo: postgresql://postgres:password@localhost:5432/inventario
-    DATABASE_USER = os.environ.get('DATABASE_USER') or 'postgres'
-    DATABASE_PASSWORD = os.environ.get('DATABASE_PASSWORD') or 'dimasoftwares'
-    DATABASE_HOST = os.environ.get('DATABASE_HOST') or 'localhost'
+    # Valores por defecto para la base de datos de Render
+    DATABASE_USER = os.environ.get('DATABASE_USER') or 'inventario_0etk_user'
+    DATABASE_PASSWORD = os.environ.get('DATABASE_PASSWORD') or 'cMmhn0IfeHBHr0hXQgoml2GUzqLICjpY'
+    DATABASE_HOST = os.environ.get('DATABASE_HOST') or 'dpg-d4i7qo6mcj7s73cep8fg-a'
     DATABASE_PORT = os.environ.get('DATABASE_PORT') or '5432'
-    DATABASE_NAME = os.environ.get('DATABASE_NAME') or 'inventario'
+    DATABASE_NAME = os.environ.get('DATABASE_NAME') or 'inventario_0etk'
     
     # Si DATABASE_URL está definida, usarla directamente (útil para servicios como Heroku, Railway, Render, etc.)
     database_url = os.environ.get('DATABASE_URL')
