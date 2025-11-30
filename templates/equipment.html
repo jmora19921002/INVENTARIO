@@ -24,7 +24,7 @@
                         <th>Marca/Modelo</th>
                         <th>IP</th>
                         <th>Departamento</th>
-                        <th>Área</th>
+                        <th>Biblioteca</th>
                         <th>Asignado a</th>
                         <th>Estatus</th>
                         <th>Fecha Registro</th>
@@ -36,12 +36,10 @@
                     <tr>
                         <td>
                             {% if eq.image_filename %}
-                                <img src="{{ url_for('uploaded_file', filename=eq.image_filename) }}" 
-                                     alt="{{ eq.code }}" 
-                                     class="img-thumbnail" 
-                                     style="width: 50px; height: 50px; object-fit: cover;">
+                            <img src="{{ url_for('uploaded_file', filename=eq.image_filename) }}" alt="{{ eq.code }}"
+                                class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
                             {% else %}
-                                <i class="bi bi-image text-muted" style="font-size: 2rem;"></i>
+                            <i class="bi bi-image text-muted" style="font-size: 2rem;"></i>
                             {% endif %}
                         </td>
                         <td><strong>{{ eq.code }}</strong></td>
@@ -50,34 +48,37 @@
                         <td>{{ eq.brand or '-' }} {{ eq.model or '' }}</td>
                         <td>
                             {% if eq.ip_address %}
-                                <span class="badge bg-info">{{ eq.ip_address }}</span>
+                            <span class="badge bg-info">{{ eq.ip_address }}</span>
                             {% else %}
-                                <span class="text-muted">-</span>
+                            <span class="text-muted">-</span>
                             {% endif %}
                         </td>
                         <td>{{ eq.department.name }}</td>
                         <td>{{ eq.area.name if eq.area else '-' }}</td>
-                        <td>{{ eq.assigned_personnel.name + ' ' + eq.assigned_personnel.last_name if eq.assigned_personnel else 'No asignado' }}</td>
+                        <td>{{ eq.assigned_personnel.name + ' ' + eq.assigned_personnel.last_name if
+                            eq.assigned_personnel else 'No asignado' }}</td>
                         <td>
                             {% if eq.status == 'Disponible' %}
-                                <span class="badge bg-success">{{ eq.status }}</span>
+                            <span class="badge bg-success">{{ eq.status }}</span>
                             {% elif eq.status == 'Asignado' %}
-                                <span class="badge bg-primary">{{ eq.status }}</span>
+                            <span class="badge bg-primary">{{ eq.status }}</span>
                             {% elif eq.status == 'Mantenimiento' %}
-                                <span class="badge bg-warning">{{ eq.status }}</span>
+                            <span class="badge bg-warning">{{ eq.status }}</span>
                             {% else %}
-                                <span class="badge bg-danger">{{ eq.status }}</span>
+                            <span class="badge bg-danger">{{ eq.status }}</span>
                             {% endif %}
                         </td>
                         <td>{{ eq.registration_date.strftime('%d/%m/%Y') }}</td>
                         <td>
-                            <a href="{{ url_for('view_equipment', id=eq.id) }}" class="btn btn-sm btn-outline-info" title="Ver detalles">
+                            <a href="{{ url_for('view_equipment', id=eq.id) }}" class="btn btn-sm btn-outline-info"
+                                title="Ver detalles">
                                 <i class="bi bi-eye"></i> Ver
                             </a>
                             <a href="{{ url_for('edit_equipment', id=eq.id) }}" class="btn btn-sm btn-outline-primary">
                                 <i class="bi bi-pencil"></i> Editar
                             </a>
-                            <form method="POST" action="{{ url_for('delete_equipment', id=eq.id) }}" class="d-inline" onsubmit="return confirm('¿Estás seguro de eliminar este equipo?');">
+                            <form method="POST" action="{{ url_for('delete_equipment', id=eq.id) }}" class="d-inline"
+                                onsubmit="return confirm('¿Estás seguro de eliminar este equipo?');">
                                 <button type="submit" class="btn btn-sm btn-outline-danger">
                                     <i class="bi bi-trash"></i> Eliminar
                                 </button>
@@ -98,4 +99,3 @@
     </div>
 </div>
 {% endblock %}
-

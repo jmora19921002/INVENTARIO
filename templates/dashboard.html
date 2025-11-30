@@ -24,11 +24,16 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h6 class="card-subtitle mb-2">Áreas</h6>
+                        <h6 class="card-subtitle mb-2">Bibliotecas</h6>
                         <h2 class="card-title">{{ total_areas }}</h2>
                     </div>
                     <i class="bi bi-geo-alt fs-1 opacity-50"></i>
                 </div>
+            </div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a href="{{ url_for('areas') }}" class="text-white text-decoration-none small stretched-link">Ver
+                    Detalles</a>
+                <div class="small text-white"><i class="bi bi-chevron-right"></i></div>
             </div>
         </div>
     </div>
@@ -86,7 +91,7 @@
                     </div>
                     <div class="col-md-2">
                         <a href="{{ url_for('add_area') }}" class="btn btn-outline-secondary w-100">
-                            <i class="bi bi-plus-circle"></i> Agregar Área
+                            <i class="bi bi-plus-circle"></i> Agregar Biblioteca
                         </a>
                     </div>
                     <div class="col-md-2">
@@ -110,4 +115,3 @@
     </div>
 </div>
 {% endblock %}
-

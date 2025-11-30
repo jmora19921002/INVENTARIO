@@ -26,7 +26,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             {{ form.code.label(class="form-label") }}
-                            {{ form.code(class="form-control") }}
+                            {{ form.code(class="form-control", id="equipment_code") }}
                             {% if form.code.errors %}
                                 <div class="text-danger small">
                                     {% for error in form.code.errors %}
@@ -50,7 +50,7 @@
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             {{ form.equipment_type.label(class="form-label") }}
-                            {{ form.equipment_type(class="form-select") }}
+                            {{ form.equipment_type(class="form-select", id="equipment_type") }}
                             {% if form.equipment_type.errors %}
                                 <div class="text-danger small">
                                     {% for error in form.equipment_type.errors %}
@@ -140,7 +140,9 @@
                             </div>
                         {% endif %}
                     </div>
-                    <div class="row">
+                    
+                    <!-- Campos condicionales para IP y MAC -->
+                    <div class="row" id="network_fields">
                         <div class="col-md-6 mb-3">
                             {{ form.ip_address.label(class="form-label") }}
                             {{ form.ip_address(class="form-control", placeholder="Ej: 192.168.1.100") }}
@@ -166,6 +168,7 @@
                             {% endif %}
                         </div>
                     </div>
+
                     <div class="mb-3">
                         {{ form.specifications.label(class="form-label") }}
                         {{ form.specifications(class="form-control") }}
@@ -178,52 +181,27 @@
                             </div>
                         {% endif %}
                     </div>
-                    <div class="row">
+                    
+                    <!-- Campos de fecha ocultos -->
+                    <div class="row d-none">
                         <div class="col-md-3 mb-3">
                             {{ form.registration_date.label(class="form-label") }}
                             {{ form.registration_date(class="form-control", type="date") }}
-                            {% if form.registration_date.errors %}
-                                <div class="text-danger small">
-                                    {% for error in form.registration_date.errors %}
-                                        <div>{{ error }}</div>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
                         </div>
                         <div class="col-md-3 mb-3">
                             {{ form.assignment_date.label(class="form-label") }}
                             {{ form.assignment_date(class="form-control", type="date") }}
-                            {% if form.assignment_date.errors %}
-                                <div class="text-danger small">
-                                    {% for error in form.assignment_date.errors %}
-                                        <div>{{ error }}</div>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
                         </div>
                         <div class="col-md-3 mb-3">
                             {{ form.purchase_date.label(class="form-label") }}
                             {{ form.purchase_date(class="form-control", type="date") }}
-                            {% if form.purchase_date.errors %}
-                                <div class="text-danger small">
-                                    {% for error in form.purchase_date.errors %}
-                                        <div>{{ error }}</div>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
                         </div>
                         <div class="col-md-3 mb-3">
                             {{ form.warranty_expiry.label(class="form-label") }}
                             {{ form.warranty_expiry(class="form-control", type="date") }}
-                            {% if form.warranty_expiry.errors %}
-                                <div class="text-danger small">
-                                    {% for error in form.warranty_expiry.errors %}
-                                        <div>{{ error }}</div>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
                         </div>
                     </div>
+
                     <div class="mb-3">
                         {{ form.notes.label(class="form-label") }}
                         {{ form.notes(class="form-control", rows="3") }}
@@ -244,5 +222,42 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Lógica para mostrar/ocultar campos de red
+        const typeSelect = document.getElementById('equipment_type');
+        const networkFields = document.getElementById('network_fields');
+        
+        function toggleNetworkFields() {
+            const selectedType = typeSelect.value;
+            if (selectedType === 'Desktop' || selectedType === 'Laptop') {
+                networkFields.style.display = 'flex';
+            } else {
+                networkFields.style.display = 'none';
+            }
+        }
+        
+        typeSelect.addEventListener('change', toggleNetworkFields);
+        toggleNetworkFields(); // Ejecutar al cargar
+        
+        // Lógica para prefijo de código
+        const codeInput = document.getElementById('equipment_code');
+        if (!codeInput.value) {
+            codeInput.value = 'S/ULA:';
+        }
+        
+        // Asegurar que el prefijo se mantenga si el usuario borra todo
+        codeInput.addEventListener('input', function() {
+            if (!this.value.startsWith('S/ULA:')) {
+                // Si el usuario borra el prefijo, restaurarlo o ajustarlo
+                // Esta es una implementación simple, se puede mejorar
+                if (this.value.length < 6) {
+                     this.value = 'S/ULA:';
+                }
+            }
+        });
+    });
+</script>
 {% endblock %}
 
