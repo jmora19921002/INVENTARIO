@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, SelectField, TextAreaField, DateField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, Optional
+from datetime import datetime
 from models import Department, Personnel, Area, Equipment
 
 class LoginForm(FlaskForm):
@@ -22,7 +23,7 @@ class DepartmentForm(FlaskForm):
     submit = SubmitField('Guardar')
 
 class AreaForm(FlaskForm):
-    name = StringField('Nombre del Área', validators=[DataRequired(), Length(max=100)])
+    name = StringField('Nombre de la Biblioteca', validators=[DataRequired(), Length(max=100)])
     description = TextAreaField('Descripción', validators=[Optional()])
     location = StringField('Ubicación', validators=[Optional(), Length(max=200)])
     submit = SubmitField('Guardar')
@@ -49,7 +50,7 @@ class EquipmentForm(FlaskForm):
                                 ('Mantenimiento', 'Mantenimiento'), ('Baja', 'Baja')],
                         validators=[DataRequired()])
     department_id = SelectField('Departamento', coerce=int, validators=[DataRequired()])
-    area_id = SelectField('Área', coerce=lambda x: int(x) if x else None, validators=[Optional()])
+    area_id = SelectField('Biblioteca', coerce=lambda x: int(x) if x else None, validators=[Optional()])
     assigned_to_id = SelectField('Asignado a', coerce=lambda x: int(x) if x else None, validators=[Optional()])
     image = FileField('Foto del Equipo', validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png', 'gif', 'webp'], 'Solo se permiten imágenes')])
     ip_address = StringField('Dirección IP', validators=[Optional(), Length(max=45)])
@@ -57,7 +58,7 @@ class EquipmentForm(FlaskForm):
                                    render_kw={"placeholder": "Ej: 00:1B:44:11:3A:B7"})
     specifications = TextAreaField('Especificaciones Técnicas', validators=[Optional()], 
                                    render_kw={"rows": 5, "placeholder": "Ej: RAM: 8GB DDR4, Procesador: Intel Core i5, Disco: 256GB SSD, etc."})
-    registration_date = DateField('Fecha de Registro', validators=[DataRequired()])
+    registration_date = DateField('Fecha de Registro', validators=[DataRequired()], default=datetime.utcnow)
     assignment_date = DateField('Fecha de Asignación', validators=[Optional()])
     purchase_date = DateField('Fecha de Compra', validators=[Optional()])
     warranty_expiry = DateField('Vencimiento de Garantía', validators=[Optional()])
@@ -85,7 +86,7 @@ class PersonnelForm(FlaskForm):
     position = StringField('Cargo', validators=[Optional(), Length(max=100)])
     employee_id = StringField('ID de Empleado', validators=[Optional(), Length(max=50)])
     department_id = SelectField('Departamento', coerce=int, validators=[DataRequired()])
-    area_id = SelectField('Área', coerce=lambda x: int(x) if x else None, validators=[Optional()])
+    area_id = SelectField('Biblioteca', coerce=lambda x: int(x) if x else None, validators=[Optional()])
     submit = SubmitField('Guardar')
     
     def __init__(self, *args, **kwargs):
