@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from models import db, User, Department, Equipment, Personnel, Area, Assignment
+from sqlalchemy import or_
 from forms import LoginForm, RegisterForm, DepartmentForm, EquipmentForm, PersonnelForm, AreaForm, AssignmentForm
 from config import Config
 from datetime import datetime
@@ -164,8 +165,56 @@ def delete_department(id):
 @app.route('/equipment')
 @login_required
 def equipment():
-    equipment_list = Equipment.query.order_by(Equipment.created_at.desc()).all()
-    return render_template('equipment.html', equipment=equipment_list)
+    # Get filter parameters
+    search = request.args.get('search')
+    type_filter = request.args.get('type')
+    department_filter = request.args.get('department')
+    area_filter = request.args.get('area')
+    status_filter = request.args.get('status')
+    date_filter = request.args.get('date')
+
+    query = Equipment.query
+
+    if search:
+        search_term = f"%{search}%"
+        query = query.filter(or_(
+            Equipment.code.ilike(search_term),
+            Equipment.serial.ilike(search_term),
+            Equipment.brand.ilike(search_term),
+            Equipment.model.ilike(search_term)
+        ))
+    
+    if type_filter:
+        query = query.filter(Equipment.equipment_type == type_filter)
+    
+    if department_filter:
+        query = query.filter(Equipment.department_id == department_filter)
+        
+    if area_filter:
+        query = query.filter(Equipment.area_id == area_filter)
+        
+    if status_filter:
+        query = query.filter(Equipment.status == status_filter)
+        
+    if date_filter:
+        try:
+            date_obj = datetime.strptime(date_filter, '%Y-%m-%d').date()
+            query = query.filter(db.func.date(Equipment.registration_date) == date_obj)
+        except ValueError:
+            pass
+
+    equipment_list = query.order_by(Equipment.created_at.desc()).all()
+    
+    # Get data for filters
+    types = [t[0] for t in db.session.query(Equipment.equipment_type).distinct()]
+    departments = Department.query.order_by(Department.name).all()
+    areas = Area.query.order_by(Area.name).all()
+
+    return render_template('equipment.html', 
+                         equipment=equipment_list,
+                         types=types,
+                         departments=departments,
+                         areas=areas)
 
 @app.route('/equipment/add', methods=['GET', 'POST'])
 @login_required
